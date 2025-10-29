@@ -35,3 +35,4 @@ def delete(db: Session, sandwich_id: int):
     db_sandwich.delete(synchronize_session=False)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
