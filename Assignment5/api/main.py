@@ -156,3 +156,37 @@ def delete_one_recipe(recipe_id: int, db: Session = Depends(get_db)):
     if recipe is None:
         raise HTTPException(status_code=404, detail="Recipe not found")
     return recipes.delete(db=db, recipe_id=recipe_id)
+
+#Order Details endpoints---------------------------------------------------------------------------
+@app.post("/order_details/", response_model=schemas.OrderDetail, tags=["Order Details"])
+def create_order_detail(order_detail: schemas.OrderDetailCreate, db: Session = Depends(get_db)):
+    return order_details.create(db=db, order_detail=order_detail)
+
+
+@app.get("/order_details/", response_model=list[schemas.OrderDetail], tags=["Order Details"])
+def read_order_details(db: Session = Depends(get_db)):
+    return order_details.read_all(db)
+
+
+@app.get("/order_details/{order_detail_id}", response_model=schemas.OrderDetail, tags=["Order Details"])
+def read_one_order_detail(order_detail_id: int, db: Session = Depends(get_db)):
+    od = order_details.read_one(db, order_detail_id=order_detail_id)
+    if od is None:
+        raise HTTPException(status_code=404, detail="Order detail not found")
+    return od
+
+
+@app.put("/order_details/{order_detail_id}", response_model=schemas.OrderDetail, tags=["Order Details"])
+def update_one_order_detail(order_detail_id: int, order_detail: schemas.OrderDetailUpdate, db: Session = Depends(get_db)):
+    od_db = order_details.read_one(db, order_detail_id=order_detail_id)
+    if od_db is None:
+        raise HTTPException(status_code=404, detail="Order detail not found")
+    return order_details.update(db=db, order_detail=order_detail, order_detail_id=order_detail_id)
+
+
+@app.delete("/order_details/{order_detail_id}", tags=["Order Details"])
+def delete_one_order_detail(order_detail_id: int, db: Session = Depends(get_db)):
+    od = order_details.read_one(db, order_detail_id=order_detail_id)
+    if od is None:
+        raise HTTPException(status_code=404, detail="Order detail not found")
+    return order_details.delete(db=db, order_detail_id=order_detail_id)
